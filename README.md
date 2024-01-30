@@ -4,7 +4,7 @@ This mongodb-k8s Terraform module aims to deploy the [mongodb-k8s charm](https:/
 
 ## Getting Started
 
-### Install requirements
+### Prerequisites
 
 The following software and tools needs to be installed and should be running in the local environment.
 
@@ -12,42 +12,19 @@ The following software and tools needs to be installed and should be running in 
 - `juju 3.x`
 - `terrafom`
 
-Install Microk8s and enable storage add-on:
+### Deploy Mongodb-agent-k8s using Terraform
+
+Make sure that `storage` plugin is enabled for Microk8s:
 
 ```console
-sudo snap install microk8s --channel=1.27-strict/stable
-sudo usermod -a -G snap_microk8s $USER
-newgrp snap_microk8s
 sudo microk8s enable hostpath-storage
 ```
 
-Install Juju:
+Add a Juju model:
 
 ```console
-sudo snap install juju --channel=3.1/stable
+juju add model <model-name>
 ```
-
-Install Terraform:
-
-```console
-sudo snap install --classic terraform
-```
-
-### Bootstrap the Juju using Microk8s and create a model to deploy Terraform module
-
-Bootstrap Juju Controller:
-
-```console
-juju bootstrap microk8s
-```
-
-Add Juju model named `test`:
-
-```console
-juju add model test
-```
-
-### Deploy Mongodb-k8s using Terraform
 
 Initialise the provider:
 
@@ -55,12 +32,12 @@ Initialise the provider:
 terraform init
 ```
 
-Customize the configuration inputs under `terraform.tfvars` file according to requirement. Make sure that given `model-name` exists.
+Customize the configuration inputs under `terraform.tfvars` file according to requirement.
 
-Sample contents of `terraform.tfvars` file:
+Replace the `model-name` value in the `terraform.tfvars` file:
 
 ```yaml
-model_name  ="test"
+model_name =<your model-name>
 ```
 
 Run Terraform Plan by providing var-file:
@@ -69,7 +46,7 @@ Run Terraform Plan by providing var-file:
 terraform plan -var-file="terraform.tfvars" 
 ```
 
-Deploy the resources, skip the approval
+Deploy the resources, skip the approval:
 
 ```console
 terraform apply -auto-approve 
